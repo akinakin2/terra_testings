@@ -1,0 +1,56 @@
+TERRAFORM
+
+Terraform agentless, IAC
+
+A. Understand Terraform is declarative:
+Define “End state”
+Focus on WHAT
+Safe: Run twice = No Change
+Understand how and why Infrastructure as Code is used
+Create an account with a cloud provider
+
+Hash Corp “Get stated” Tutorials
+
+The core workflow: Terraform init, Terraform plan, Terraform apply
+Managing change: manage infrastructure and collaborate using HCP Terraform
+
+c.
+Terraform is agentless, relate with multicloud services
+Terraform is stateful: know the progress and state of infrastructure per time
+Terraform is all in one place with version control
+Terraform is declare the end state of the infrastructure and easy to make change
+Terraform has no manual click-offs
+Terraform saves money
+Terraform is great for disaster recovery
+Terraform minimize user errors.
+
+
+Terraform file is called .tf file
+
+Hands-on Terraform
+Install Terraform: Follow steps as it is on their website: Harshicorp.com
+
+
+sudo apt update
+sudo apt install -y gnupg software-properties-common curl
+
+curl -fsSL https://apt.releases.hashicorp.com/gpg \
+  | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
+https://apt.releases.hashicorp.com $(. /etc/os-release && echo $VERSION_CODENAME) main" \
+  | sudo tee /etc/apt/sources.list.d/hashicorp.list
+
+
+sudo apt update
+sudo apt install -y terraform
+
+REDHAT/CENTOS 10
+
+$ sudo dnf install -y dnf-plugins-core
+$ sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+$ sudo dnf install -y terraform
+$ terraform --version
+
+Whenever you create a new configuration on terraform, you must initialize it by using:
+ $ terraform init	                in the Terraform directly
