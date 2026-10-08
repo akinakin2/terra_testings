@@ -24,7 +24,6 @@ Terraform saves money
 Terraform is great for disaster recovery
 Terraform minimize user errors.
 
-
 Terraform file is called .tf file
 
 Hands-on Terraform
@@ -50,7 +49,108 @@ REDHAT/CENTOS 10
 $ sudo dnf install -y dnf-plugins-core
 $ sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
 $ sudo dnf install -y terraform
+
+# Confirm terraform installation 
 $ terraform --version
 
 Whenever you create a new configuration on terraform, you must initialize it by using:
- $ terraform init	                in the Terraform directly
+ $ terraform init	in the Terraform directory	(Initializes your project)
+ $ terraform plan	(takes your config and check it against the currently deployed state and your state file and 
+			figure out the set of the sequence of things that need to happen to provision that infrastructure )
+ $ terraform apply	To execute your .tf file on AWS / your cloud or onsite provider
+ $ terraform destroy 	To destroy what you created in your provider
+
+
+TERRAFORM-STATE-FILE is a JSON document that acts as Terraform's memory, recording the EXACT metadata and 
+mapping of your configuration code to the real-world infrastructure resources deployed in your cloud provider. 
+By default, it is saved in your local workspace directory under the name terraform.tfstate. 
+It essentially functions as a JSON database storing THE LAST KNOWN state of your infrastructure code execution.
+
+
+Key Functions of the State-File
+
+• Resource Mapping: When you write code for a resource (e.g., an AWS EC2 instance), Terraform creates it and 
+stores its real-world physical ID alongside your configuration name so it knows exactly which asset it manages.
+
+• Tracking Metadata & Dependencies: It logs the order in which resources depend on one another, enabling safe 
+parallel creation and correct ordering during destruction.
+
+• Performance Caching: Instead of making hundreds of slow API requests to your cloud provider every
+time you run a command, Terraform queries this file to quickly verify your infrastructure attributes.
+
+• Determining Changes: During a terraform plan or terraform apply, Terraform uses the file to compare what you have
+currently deployed against what you want in your configuration, calculating the net additions, deletions, or updates required.
+
+
+Terraform MODULE is a collection of Terraform configuration files grouped together in a single directory. 
+It acts as a reusable, self-contained building block for Infrastructure as Code (IaC), 
+allowing you to package multiple related resources into a single logical unit.
+
+Think of a module like a function in a traditional programming language: it takes input variables,
+provisions a set of infrastructure components based on those inputs, and returns output values.
+
+🧱 The Structure of a Module
+
+At its simplest, any folder containing .tf files is a module. A standard, reusable child module typically includes three primary files:
+• variables.tf (Inputs): Defines the parameters the module accepts, allowing consumers to customize its behavior.
+• main.tf (Resources): Contains the actual resource blocks (e.g., EC2 instances, databases, networking) that will be deployed.
+• outputs.tf (Outputs): Defines the values the module passes back out to the rest of your infrastructure config (like an IP address or database endpoint).
+
+
+Module Hierarchy
+
+Terraform relies on a PARENT-CHILD relationship to orchestrate configurations:
+1. Root Module: The main working directory where you run commands like terraform plan and terraform apply.
+		Every Terraform configuration has at least one root module.
+2. Child Module: A separate module that is called from within the root module (or from another child module) using a module block.
+
+TERRAFORM FILE BLOCKs can be broken down by their core function:
+
+1. The Core Engines (Infrastructure & Providers)
+
+These blocks interact directly with external APIs and define your actual infrastructure.
+
+• resource: The building block of Terraform. It defines the specific infrastructure components you want to create and manage 
+	(e.g., virtual machines, VPCs, databases).
+• provider: Connects your code to target cloud platforms or services (e.g., AWS, Azure, Google Cloud). 
+	It handles authentication and region specifications.
+• data: Performs read-only operations to fetch existing resources or information from outside your current configuration 
+	(e.g., querying an existing AMI ID or look up a subnet).
+
+
+2. Data Flow & Reusability (Variables & Modules)
+
+These blocks give your configurations flexibility, allow parameterized inputs, and support clean architecture.
+
+• variable: Defines input variables. They act like function arguments, allowing you to pass dynamic values 
+	into your module without hardcoding them.
+• output: Defines return values that are displayed on the command line or exported for other
+	Terraform configurations to read.
+• locals: Declares local variables that assign a short name to an expression. These act like internal temporary 
+	variables to avoid repeating complex expressions.
+• module: Instantiates a reusable set of standard configurations from a separate directory or remote registry, 
+	promoting "Don't Repeat Yourself" (DRY) principles.
+
+
+3. Global Settings & Lifecycle Control
+
+These blocks govern how Terraform itself behaves rather than managing individual cloud resources.
+
+• terraform: Configures global Terraform behaviors. This is where you enforce the required engine version, 
+	lock down external provider version requirements, and set up state management.
+• backend: (Nested inside the terraform block) Dictates where your state file (.tfstate) is SAVED SECURELY, 
+	such as an AWS S3 bucket or Azure Blob Storage. {This is remote storage of (.tfstate file)}
+ Advantage of remote state-file storage:
+		. Sensitive data encryption
+		. Collaboration possible between developer
+		. Automation Possible, GitHub action, CICD pipe-line
+		. BUT increase complexity
+• lifecycle: (Nested inside resource blocks) Overrides default resource management rules. 
+	For instance, you can instruct Terraform to create_before_destroy or prevent_destroy to avoid downtime or accidents
+
+
+API stands for Application Programming Interface. 
+
+It is a software intermediary that allows two different applications to communicate and share data with each other.
+Think of an API as a digital contract or a translator. It defines a strict set of rules, requests, and responses so that 
+software built by different companies—using entirely different coding languages—can work together seamlessly behind the scenes
