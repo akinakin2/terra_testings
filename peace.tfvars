@@ -1,4 +1,6 @@
 # terraform plan -var-file="peace.tfvars"
+# The configured SSH range, 203.0.113.10/32, is a documentation-only address, not a usable admin IP. Replace it with your actual trusted CIDR before deploying.
+
 aws_profile          = "default"
 aws_region           = "us-east-2"
 environment          = "prod"
