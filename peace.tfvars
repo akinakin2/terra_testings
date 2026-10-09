@@ -1,0 +1,11 @@
+# terraform plan -var-file="peace.tfvars"
+aws_profile          = "default"
+aws_region           = "us-east-2"
+environment          = "prod"
+vpc_cidr             = "10.0.0.0/16"
+public_subnet_cidr   = "10.0.1.0/24"
+private_subnet_cidr  = "10.0.2.0/24"
+availability_zones   = ["us-east-2a", "us-east-2b"]
+allowed_ssh_cidrs    = ["203.0.113.10/32"]
+allowed_http_cidrs   = ["0.0.0.0/0"]
+allowed_https_cidrs  = ["0.0.0.0/0"]
